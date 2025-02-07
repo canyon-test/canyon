@@ -27,7 +27,6 @@ jobs:
       - run: |
           COREPACK_INTEGRITY_KEYS=0 corepack prepare pnpm@9 --activate
           corepack enable
-          git restore .
           pnpm i
 
       - name: Install Rust
@@ -39,6 +38,7 @@ jobs:
         shell: bash
         run: |
           rustup target add wasm32-wasi
+          git restore .
           git status
           cat package.json
 
