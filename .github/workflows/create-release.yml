@@ -63,7 +63,7 @@ jobs:
     needs: build-multi
     runs-on: ubuntu-latest
     # 仅在 release 事件下运行，避免其他触发条件下执行
-    if: github.event_name == 'release'
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
       # 分别下载各个平台构建的 artifact 到指定目录
       - name: Download linux artifact
