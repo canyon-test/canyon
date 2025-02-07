@@ -1,0 +1,12 @@
+[workspace]
+members  = [
+    "plugins/swc-plugin-canyon",
+    "tools/canyon-uploader"
+]
+
+[workspace.package]
+authors      = ["Allen Zhang <wr.zhang25@gmail.com>"]
+edition    = "2021"
+license    = "MIT"
+homepage     = "https://github.com/canyon-project/canyon"
+repository = "https://github.com/canyon-project/canyon.git"
