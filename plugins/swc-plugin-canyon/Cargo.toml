@@ -8,7 +8,7 @@ edition      = { workspace = true }
 homepage     = { workspace = true }
 license      = { workspace = true }
 repository   = { workspace = true }
-name         = "swc_plugon_canyon"
+name         = "swc_plugin_canyon"
 publish      = false
 version      = "0.0.1"
 
