@@ -25,8 +25,9 @@ jobs:
           node-version: 20
 
       - run: |
-          corepack prepare pnpm@9 --activate
+          COREPACK_INTEGRITY_KEYS=0 corepack prepare pnpm@9 --activate
           corepack enable
+          git restore .
           pnpm i
 
       - name: Install Rust
