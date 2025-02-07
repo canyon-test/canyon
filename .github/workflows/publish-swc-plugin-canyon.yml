@@ -1,10 +1,9 @@
-name: Npm Publish swc-plugin-canyon
+name: npm
 
 on:
   push:
     branches:
       - main
-      - ci
 
 env:
   RUST_LOG: debug
@@ -43,7 +42,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm --filter=swc-plugin-canyon publish -f --no-git-checks --access=public
+          publish: pnpm publish -r --access public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
