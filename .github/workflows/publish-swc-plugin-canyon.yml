@@ -25,6 +25,7 @@ jobs:
           node-version: 20
 
       - run: |
+          COREPACK_INTEGRITY_KEYS=0 corepack prepare
           corepack enable
           pnpm i
 
