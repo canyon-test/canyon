@@ -154,8 +154,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release_artifacts/windows/canyon-uploader.exe
-          asset_name: canyon_uploader.exe
+          asset_path: release_artifacts/windows/canyon_uploader.exe
+          asset_name: canyon-uploader.exe
           asset_content_type: application/octet-stream
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
