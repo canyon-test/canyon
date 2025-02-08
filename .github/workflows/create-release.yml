@@ -139,9 +139,10 @@ jobs:
           ls -l release_artifacts
 
       - name: Upload PNPM release asset
+        # 仅在 publish-rust 生成了 upload_url 时执行上传步骤，避免为空时报错
+        if: ${{ needs.publish-rust.outputs.upload_url != '' }}
         uses: actions/upload-release-asset@v1
         with:
-          # 使用 publish-rust 生成的 upload_url
           upload_url: ${{ needs.publish-rust.outputs.upload_url }}
           asset_path: release_artifacts/pnpm
           asset_name: pnpm-binary
