@@ -16,7 +16,7 @@ on:
       - 'v*'
 
 jobs:
-  build-multi:
+  build-rust:
     strategy:
       matrix:
         include:
@@ -55,49 +55,35 @@ jobs:
           name: ${{ matrix.artifact_name }}
           path: target/${{ matrix.target }}/release/canyon_uploader${{ matrix.exe_suffix }}
 
-  publish:
-    needs: build-multi
+  publish-rust:
+    needs: build-rust
     runs-on: ubuntu-latest
     # 仅在 release 事件下运行，避免其他触发条件下执行
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      # 分别下载各个平台构建的 artifact 到指定目录
       - name: Download linux artifact
         uses: actions/download-artifact@v4
         with:
           name: linux-binary
           path: release_artifacts
-#      - name: Download macos artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: macos-binary
-#          path: release_artifacts
-#      - name: Download windows artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: windows-binary
-#          path: release_artifacts
 
-      # 创建 Release，此处 tag 由打标签触发时传入（例如 v1.0.0）
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: "Release built via GitHub Actions"
+          body: "Rust release built via GitHub Actions"
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 列出 release_artifacts 目录内容
+      - name: List release_artifacts directory contents
         run: |
-          echo "列出 release_artifacts 目录内容："
+          echo "Listing contents of release_artifacts directory:"
           ls -l release_artifacts
 
-
-      # 上传各平台产物到 Release 页面
       - name: Upload linux release asset
         uses: actions/upload-release-asset@v1
         with:
@@ -105,5 +91,66 @@ jobs:
           asset_path: release_artifacts/canyon_uploader
           asset_name: linux-binary
           asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-pnpm:
+    needs: publish-rust
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build PNPM project
+        run: pnpm build
+
+      - name: Upload PNPM Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnpm-binary
+          path: ./tools/canyon-extension/canyon-extension.zip  # 假设 PNPM 构建产物在 dist 目录，根据实际情况修改
+
+  publish-pnpm:
+    needs: build-pnpm
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download PNPM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pnpm-binary
+          path: release_artifacts/pnpm
+
+      - name: Get release info
+        id: get_release
+        uses: bruceadams/get-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+
+      - name: List release_artifacts directory contents
+        run: |
+          echo "Listing contents of release_artifacts directory:"
+          ls -l release_artifacts
+
+      - name: Upload PNPM release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: release_artifacts/pnpm
+          asset_name: pnpm-binary
+          asset_content_type: application/zip  # 根据实际情况修改内容类型
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
