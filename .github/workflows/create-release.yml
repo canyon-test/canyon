@@ -132,14 +132,6 @@ jobs:
           name: pnpm-binary
           path: release_artifacts/pnpm
 
-      - name: Get release info
-        id: get_release
-        uses: bruceadams/get-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-
       - name: List release_artifacts directory contents
         run: |
           echo "Listing contents of release_artifacts directory:"
