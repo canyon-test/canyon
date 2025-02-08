@@ -128,7 +128,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release_artifacts/your_pnpm_artifact_file  # Adjust to the actual file name of your pnpm build artifact
+          asset_path: release_artifacts/canyon-extension.zip  # Adjust to the actual file name of your pnpm build artifact
           asset_name: pnpm-artifact
           asset_content_type: application/octet-stream
         env:
