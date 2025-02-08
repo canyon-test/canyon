@@ -100,17 +100,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: linux-binary
-          path: release_artifacts
+          path: release_artifacts/linux
       - name: Download macOS Rust artifact
         uses: actions/download-artifact@v4
         with:
           name: macos-binary
-          path: release_artifacts
+          path: release_artifacts/macos
       - name: Download Windows Rust artifact
         uses: actions/download-artifact@v4
         with:
           name: windows-binary
-          path: release_artifacts
+          path: release_artifacts/windows
 
       # Download pnpm artifact
       - name: Download pnpm artifact
@@ -139,7 +139,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release_artifacts/canyon_uploader
+          asset_path: release_artifacts/linux/canyon_uploader
           asset_name: linux-binary
           asset_content_type: application/octet-stream
         env:
@@ -149,7 +149,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release_artifacts/canyon_uploader
+          asset_path: release_artifacts/macos/canyon_uploader
           asset_name: macos-binary
           asset_content_type: application/octet-stream
         env:
@@ -159,7 +159,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release_artifacts/canyon_uploader.exe
+          asset_path: release_artifacts/windows/canyon_uploader.exe
           asset_name: windows-binary.exe
           asset_content_type: application/octet-stream
         env:
